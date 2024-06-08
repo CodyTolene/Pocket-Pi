@@ -16,10 +16,13 @@ https://github.com/CodyTolene/Pocket-Pi/tree/development
 
 - [Raspberry Pi 2 W Information](#raspberry-pi-two-w-info)
 - [Raspberry Pi 2 W OS Setup](#pi-os-setup)
-- [Updating and Upgrading the Raspberry Pi Zero](#updating-and-upgrading)
+- [MicroSD Card Setup & PC Connection (SSH)](#sd-card-setup-and-pc-connection)
+- [Increasing Swap Size](#increasing-swap-size)
+- [Updating, Upgrading, and Dependencies](#updating-upgrading-dependencies)
 - [Screen Module Setup](#screen-module-setup)
 - [Battery Module Setup](#battery-module-setup)
-- [Setup speed increase (for installs)](#setup-speed-increase)
+- [Licensing](#licensing)
+- [Wrapping Up](#wrapping-up)
 
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
@@ -68,13 +71,13 @@ Documents:
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
 
-## Pi OS Setup <a name="pi-os-setup"></a>
+## Raspberry Pi Zero 2 W OS Setup <a name="pi-os-setup"></a>
 
 1. Download the Raspberry Pi Imager: https://www.raspberrypi.com/software/
 
 2. Plug the microSD card into the computer and open the Raspberry Pi Imager.
 
-3. We'll install the full Raspberry Pi OS (32-bit) in this example so we can take advantage of our massive 1.3inch IPS LCD display HAT:
+3. We'll install the full Raspberry Pi OS (Bookworm, 32-bit) in this example so we can take advantage of our massive 1.3inch IPS LCD display HAT:
 
 > ![Info][img-info] Before installation enable SSH, take note of the hostname, set the username and password for the Raspberry Pi Zero, and set up your connection to the Wi-Fi network.
 
@@ -101,14 +104,18 @@ Documents:
   </p>
 </details>
 
-4. After the installation is complete, open the microSD card on your computer and then the `config.txt` file. Add the following to the end of the file:
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## MicroSD Card Setup & PC Connection (SSH) <a name="sd-card-setup-and-pc-connection"></a>
+
+1. With the microSD card still in your computer, open the `config.txt` file. Add the following to the end of the file:
 
   ```bash
-  # Enable SPI and I2C interfaces
-  dtparam=i2c_arm=on
-  dtparam=spi=on
-  
-  # 1.3inch IPS LCD display HAT
+  # Add these new settings for the 1.3inch IPS LCD display HAT
   hdmi_force_hotplug=1
   hdmi_cvt=300 300 60 1 0 0 0
   hdmi_group=2
@@ -116,29 +123,48 @@ Documents:
   display_rotate=0
   gpio=6,19,5,26,13,21,20,16=pu
 
-  # Enable USB OTG port
+  # Enable USB OTG port (SSH and Ethernet over USB)
   dtoverlay=dwc2
-
-  # Be sure to comment out any other `dtoverlay` related lines.
-  # dtoverlay=vc4-kms-v3d
-  # max_framebuffers=2
   ```
 
-5. Save and close `config.txt`. 
+2. Uncomment the existing lines to enable SPI and I2C interfaces, make sure they're set to "on":
 
-6. In the same directory, open the file `cmdline.txt` and add `modules-load=dwc2,g_ether` after `rootwait`. Ensure it remains a single line of text, and has proper spacing. For example:
+  ```bash
+  dtparam=i2c_arm=on
+  dtparam=spi=on
+  ```
+
+3. Make sure to comment out the following lines:
+
+  ```bash
+    # dtoverlay=vc4-kms-v3d
+    # max_framebuffers=2
+  ```
+
+4. Save and close `config.txt`. 
+
+5. In the same directory, open the file `cmdline.txt` and add `modules-load=dwc2,g_ether` after `rootwait`. Ensure it remains a single line of text, and has proper spacing. For example:
 
   ```bash
   ... rootwait modules-load=dwc2,g_ether ...
   ```
 
-7. Save and close `cmdline.txt`. 
+  > ![Info][img-info] This is part of enabling SSH and Ethernet over USB.
 
-8. Create a new file named `ssh` in the root of the microSD card. This will enable SSH on the Raspberry Pi Zero.
+6. Save and close `cmdline.txt`. 
 
-9. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
+7. Create a new file named `ssh` in the root of the microSD card. This is part of enabling SSH on the Raspberry Pi Zero.
 
-10. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on. You should now be able to connect to your Pi using SSH.
+8. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
+
+9. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on. 
+
+10. You should now be able to connect to your Pi using SSH:
+
+  ```bash
+  # Replace "code@pinhead.local" with your own `hostname` and `username`.
+  ssh code@pinhead.local
+  ```
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -146,9 +172,61 @@ Documents:
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
 
-## Updating and Upgrading the Raspberry Pi Zero <a name="updating-and-upgrading"></a>
+## Increasing Swap Size <a name="increasing-swap-size"></a>
 
-In this section we will update and upgrade the Raspberry Pi Zero to ensure we have the latest software and security updates. It may be possible to skip this section if you've just installed the Raspberry Pi OS. If you're unsure, it's always a good idea to update to be sure (at the very least just run `sudo apt update` to check). This will take aproximately 10-20 minutes to complete.
+Increasing the swap size can help speed up the installation process and various other things. This is especially useful when installing software that requires a lot of memory, such as the Raspberry Pi OS update and upgrade process. The default swap size is 100MiB, which is not enough for some installations. Below we will change this to 2GiB (2048MiB). To do this, follow these steps:
+
+  > ![Info][img-info] You can revert this at a later point if you wish or keep it. See "Reverting back to 100MiB" below.
+
+  ```bash
+  # Check current swap size (you should see 100MiB or 99MiB for "total")
+  free -h
+  # Disable current swap
+  sudo dphys-swapfile swapoff
+  # Set the swap file size to 2048MiB, or 2GiB
+  sudo sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
+  # Recreate the swap file with the new size
+  sudo dphys-swapfile setup
+  # Enable the new swap size
+  sudo dphys-swapfile swapon
+  # Reboot
+  sudo reboot
+  # Reconnect to the Raspberry Pi Zero
+  ssh code@pinhead.local
+  # Verify the new swap size (should be 2048MiB, or 2GiB)
+  free -h
+  ```
+
+<details>
+  <summary>Reverting back to 100MiB (click to expand)</summary>
+
+  ```bash
+  # Disable current swap
+  sudo dphys-swapfile swapoff
+  # Set the swap file size back to 100MiB
+  sudo sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+  # Recreate the swap file with the original size
+  sudo dphys-swapfile setup
+  # Enable the original swap size
+  sudo dphys-swapfile swapon
+  # Reboot
+  sudo reboot
+  # Reconnect to the Raspberry Pi Zero
+  ssh code@pinhead.local
+  # Verify the reverted swap size (you should be 100MiB or 99MiB)
+  free -h
+  ```
+</details>
+
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Updating, Upgrading, and Dependencies <a name="updating-upgrading-dependencies"></a>
+
+In this section we will update and upgrade the Raspberry Pi Zero to ensure we have the latest software and security updates.
 
 1. Open the terminal and run the following command to access the Raspberry Pi Zero. Using the hostname and the username and password you set during the installation:
 
@@ -158,13 +236,23 @@ In this section we will update and upgrade the Raspberry Pi Zero to ensure we ha
 
 2. Update & upgrade the system (the y flag will automatically answer yes to any prompts)
 
-  > ![Info][img-info] You will need to increase your swap size to 2GB to speed up the upgrade process. Follow the steps in the [Setup speed increase](#setup-speed-increase) section below. The installation may appear to hang, if it does, give it some time. You may need restart the process by pressing `Ctrl+C` and running the command again but it should continue from where it left off.
-
   ```bash
-  sudo apt update && sudo apt full-upgrade -y
+  sudo apt-get update && sudo apt-get full-upgrade -y
   ```
 
-3. You may now change the swap size back to the default value and reboot. Follow the steps in the [Setup speed increase](#setup-speed-increase) section below and continue with the screen and battery module installations.
+3. Install the necessary dependencies for the modules in the upcoming steps
+
+  ```bash
+  sudo apt-get install python3-pip python3-pil python3-numpy python3-spidev -y
+  sudo apt-get install p7zip-full cmake -y
+  sudo apt-get install libraspberrypi-dev raspberrypi-kernel-headers -y
+  ```
+
+4. Reboot the Raspberry Pi Zero
+
+  ```bash
+  sudo reboot
+  ```
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -192,11 +280,11 @@ Connect to the Raspberry Pi Zero via SSH:
   ssh code@pinhead.local
   ```
 
-Run the following commands to enable the SPI interface, use the image guide as a reference:
+Run the following commands to enable the SPI interface. It should already be enabled if you followed the SD card setup, but it's good to make sure.
 
   ```bash
   sudo raspi-config
-  Choose Interface Options -> SPI -> Yes  to enable SPI interface
+  Choose Interface Options -> SPI -> Yes
   ```
 
 <details>
@@ -240,6 +328,7 @@ Reboot Raspberry Pi：
 ### Software Installation
 
   ```bash
+  cd ~
   wget https://github.com/joan2937/lg/archive/master.zip
   unzip master.zip
   cd lg-master
@@ -251,17 +340,16 @@ Reboot Raspberry Pi：
 Open the Raspberry Pi terminal and run the following command:
 
   ```bash
-  sudo apt install p7zip-full -y
   wget https://files.waveshare.com/upload/b/bd/1.3inch_LCD_HAT_code.7z
   7z x 1.3inch_LCD_HAT_code.7z -r -o./1.3inch_LCD_HAT_code
   sudo chmod 777 -R 1.3inch_LCD_HAT_code
-  cd 1.3inch_LCD_HAT_code
   ```
 
 Run the demo:
 
   ```bash
-  cd 1.3inch_LCD_HAT_code/python
+  # Change directory to where the Python demo code is located
+  cd 1.3inch_LCD_HAT_code/1.3inch_LCD_HAT_code/python
   # This will show an image on the screen for a few seconds.
   sudo python main.py
   # This will show another image on the screen. 
@@ -273,10 +361,6 @@ After confirming the demos, you can now compile and run the screen firmware:
 
   ```bash
   cd ~
-  # Install the necessary dependencies
-  sudo apt install python3-pip python3-pil python3-numpy python3-spidev
-  # This will take a few minutes to complete.
-  sudo apt install cmake libraspberrypi-dev p7zip-full -y
   wget https://files.waveshare.com/upload/f/f9/Waveshare_fbcp.7z
   7z x Waveshare_fbcp.7z -o./waveshare_fbcp
   cd waveshare_fbcp
@@ -289,6 +373,7 @@ Use the following commands to compile the software for the 1.3 inch screen:
   ```bash
   cmake -DSPI_BUS_CLOCK_DIVISOR=20 -DWAVESHARE_1INCH3_LCD_HAT=ON -DBACKLIGHT_CONTROL=ON -DSTATISTICS=0 ..
   make -j
+  # Test the screen, it will display a "_" on screen for a bit. press `Ctrl+C` to quit.
   sudo ./fbcp
   ```
 
@@ -333,11 +418,11 @@ Documentation:
 
 ### Pi OS Configuration
 
-Open the terminal:
+Run the following commands to enable the I2C interface. It should already be enabled if you followed the SD card setup, but it's good to make sure.
 
   ```bash
   sudo raspi-config 
-  Choose Interfacing Options -> I2C -> Yes to enable I2C interface 
+  Choose Interfacing Options -> I2C -> Yes
   ```
 
 <details>
@@ -375,9 +460,6 @@ Then reboot the Pi Zero:
 ### Software Installation
 
   ```bash
-  # Install the p7zip package to handle 7z archives
-  sudo apt install p7zip
-
   # Download the UPS HAT software archive from the Waveshare website
   wget https://files.waveshare.com/upload/4/40/UPS_HAT_C.7z
 
@@ -396,56 +478,6 @@ Then reboot the Pi Zero:
   ```
 
   > ![Info][img-info] If the current value is negative, it means that the batteries are feeding the Raspberry Pi. If the current value is positive, it means that the batteries are charging.
-
-<p align="right">[ <a href="#index">Index</a> ]</p>
-
-<!---------------------------------------------------------------------------->
-<!---------------------------------------------------------------------------->
-<!---------------------------------------------------------------------------->
-
-## Setup speed increase (for installs) <a name="setup-speed-increase"></a>
-
-If you want to speed up the installation process, you can increase the swap size temporarily. To do this, follow these steps:
-
-  ```bash
-  # Check current swap size (should see 100Mi or 99Mi for total)
-  free -h
-  # Disable current swap
-  sudo dphys-swapfile swapoff
-  # Set the swap file size to 2GB
-  sudo sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
-  # Recreate the swap file with the new size
-  sudo dphys-swapfile setup
-  # Enable the new swap size
-  sudo dphys-swapfile swapon
-  # Reboot
-  sudo reboot
-  # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
-  # Verify the new swap size (should be 2GB)
-  free -h
-  ```
-
-Continue with your installations.
-
-After the installation(s) are complete, you can reset the swap size to the default value:
-
-  ```bash
-  # Disable current swap
-  sudo dphys-swapfile swapoff
-  # Set the swap file size back to 100MB
-  sudo sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
-  # Recreate the swap file with the original size
-  sudo dphys-swapfile setup
-  # Enable the original swap size
-  sudo dphys-swapfile swapon
-  # Reboot
-  sudo reboot
-  # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
-  # Verify the reverted swap size (should be 100MB)
-  free -h
-  ```
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 

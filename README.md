@@ -8,13 +8,22 @@ For the latest updates, please visit the development branch:
 
 https://github.com/CodyTolene/Pocket-Pi/tree/development
 
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
 ## Index <a name="index"></a>
 
 - [Raspberry Pi 2 W Information](#raspberry-pi-two-w-info)
 - [Raspberry Pi 2 W OS Setup](#pi-os-setup)
-- [Screen Module](#screen-module)
-- [Battery Module](#battery-module)
-- [Pi OS Upgrade](#pi-os-upgrade)
+- [Updating and Upgrading the Raspberry Pi Zero](#updating-and-upgrading)
+- [Screen Module Setup](#screen-module-setup)
+- [Battery Module Setup](#battery-module-setup)
+- [Setup speed increase (for installs)](#setup-speed-increase)
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
 
 ## Raspberry Pi Zero 2 W Information <a name="raspberry-pi-two-w-info"></a>
 
@@ -44,16 +53,20 @@ Documents:
 - https://datasheets.raspberrypi.com/rpizero2/raspberry-pi-zero-2-w-product-brief.pdf
 
 <p align="center">
-  <img width="500" src=".github/images/pi3g-top.png" />
+  <img width="500" src=".github/images/pi3g/pi3g-top.png" />
 </p>
 
 <p align="center">
-  <img width="500" src=".github/images/pi3g-bottom.png" />
+  <img width="500" src=".github/images/pi3g/pi3g-bottom.png" />
 </p>
 
 > ![Info][img-info] Images courtesy of [pi3g][url-pi3g]
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
 
 ## Pi OS Setup <a name="pi-os-setup"></a>
 
@@ -69,22 +82,22 @@ Documents:
   <summary>Installation Images (click to expand)</summary>
 
   <p align="center">
-    <img width="500" src=".github/images/raspberry-pi-os-device.png" />
+    <img width="500" src=".github/images/screenshots/raspberry-pi-os-device.png" />
   </p>
   <p align="center">
-    <img width="500" src=".github/images/raspberry-pi-os.png" />
+    <img width="500" src=".github/images/screenshots/raspberry-pi-os.png" />
   </p>
   <p align="center">
-    <img width="500" src=".github/images/raspberry-pi-os-customization.png" />
+    <img width="500" src=".github/images/screenshots/raspberry-pi-os-customization.png" />
   </p>
   <p align="center">
-    <img width="500" src=".github/images/raspberry-pi-os-ready.png" />
+    <img width="500" src=".github/images/screenshots/raspberry-pi-os-ready.png" />
   </p>
   <p align="center">
-    <img width="500" src=".github/images/raspberry-pi-os-installing.png" />
+    <img width="500" src=".github/images/screenshots/raspberry-pi-os-installing.png" />
   </p>
   <p align="center">
-    <img width="500" src=".github/images/raspberry-pi-os-install-complete.png" />
+    <img width="500" src=".github/images/screenshots/raspberry-pi-os-install-complete.png" />
   </p>
 </details>
 
@@ -119,35 +132,43 @@ Documents:
 
 8. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
 
-9. Connect the Raspberry Pi Zero to the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on.
+9. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on.
 
-  > ![Info][img-info] The Raspberry Pi Zero will appear as a USB Ethernet device on the computer.
-
-10. Open the terminal and run the following command to access the Raspberry Pi Zero. Using the hostname and the username and password you set during the installation:
-
-  ```bash
-  ssh code@pinhead.local
-  ```
-
-11. Update the system:
-
-  ```bash
-  sudo apt-get update
-  ```
-
-12. Reboot the Raspberry Pi Zero once more to apply the changes:
-
-  ```bash
-  sudo reboot
-  # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
-  ```
-
-13. Continue with the installation of the screen and battery modules below.
+10. You should now be able to connect to your Pi using SSH either wirelessly (if you entered your Wi-Fi settings during setup) or USB cable. If you're using a USB cable, you may need to install the necessary drivers, there are many guides online to help with this.
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
-## Screen Module <a name="screen-module"></a>
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Updating and Upgrading the Raspberry Pi Zero <a name="updating-and-upgrading"></a>
+
+In this section we will update and upgrade the Raspberry Pi Zero to ensure we have the latest software and security updates. It may be possible to skip this section if you've just installed the Raspberry Pi OS. If you're unsure, it's always a good idea to update to be sure. This will take aproximately 10-20 minutes to complete.
+
+1. Open the terminal and run the following command to access the Raspberry Pi Zero. Using the hostname and the username and password you set during the installation:
+
+  ```bash
+  ssh code@pinhead.local
+  ```
+
+2. Update & upgrade the system (the y flag will automatically answer yes to any prompts)
+
+  > ![Info][img-info] You will need to increase your swap size to 2GB to speed up the upgrade process. Follow the steps in the [Setup speed increase](#setup-speed-increase) section below. The installation may appear to hang, if it does, give it some time. You may need restart the process by pressing `Ctrl+C` and running the command again but it should continue from where it left off.
+
+  ```bash
+  sudo apt update && sudo apt full-upgrade -y
+  ```
+
+3. You may now change the swap size back to the default value and reboot. Follow the steps in the [Setup speed increase](#setup-speed-increase) section below and continue with the screen and battery module installations.
+
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Screen Module Setup <a name="screen-module-setup"></a>
 
 **240x240, 1.3inch IPS LCD display HAT**
 
@@ -161,7 +182,13 @@ Documentation:
 
 ### Pi OS Configuration
 
-Open the terminal:
+Connect to the Raspberry Pi Zero via SSH:
+
+  ```bash
+  ssh code@pinhead.local
+  ```
+
+Run the following commands to enable the SPI interface, use the image guide as a reference:
 
   ```bash
   sudo raspi-config
@@ -172,23 +199,23 @@ Open the terminal:
   <summary>Config setup Images (click to expand)</summary>
 
   <p align="center">
-    <img src=".github/images/config-interface-options.png" />
+    <img src=".github/images/screenshots/config-interface-options.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-spi.png" />
+    <img src=".github/images/screenshots/config-spi.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-spi-confirm.png" />
+    <img src=".github/images/screenshots/config-spi-confirm.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-spi-done.png" />
+    <img src=".github/images/screenshots/config-spi-done.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-finish.png" />
+    <img src=".github/images/screenshots/config-finish.png" />
   </p>
 </details>
 
@@ -239,8 +266,6 @@ Run the demo:
 
 After confirming the demos, you can now compile and run the screen firmware. First we need to install the necessary dependencies:
 
-  > ![Info][img-info] You will need to increase your swap size to 2GB to speed up the upgrade process. Follow the steps in the [Setup speed increase](#setup-speed-increase) section below.
-
   ```bash
   cd ~
   # This will take a few minutes to complete.
@@ -272,7 +297,7 @@ Auto-start when Power on:
 Then add `fbcp&` on the line above and before `exit 0`, as the picture below:
 
 <p align="center">
-  <img src=".github/images/fbcp.png" />
+  <img src=".github/images/screenshots/fbcp.png" />
 </p>
 
 After you're done making edits press `Ctrl+X`, then `Y`, and then `Enter` to save and exit. Then reboot the Raspberry Pi Zero:
@@ -285,7 +310,11 @@ After you're done making edits press `Ctrl+X`, then `Y`, and then `Enter` to sav
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
-## Battery Module <a name="battery-module"></a>
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Battery Module Setup <a name="battery-module-setup"></a>
 
 **Uninterruptible Power Supply UPS HAT**
 
@@ -310,23 +339,23 @@ Open the terminal:
   <summary>Config setup Images (click to expand)</summary>
 
   <p align="center">
-    <img src=".github/images/config-interface-options.png" />
+    <img src=".github/images/screenshots/config-interface-options.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-i2c.png" />
+    <img src=".github/images/screenshots/config-i2c.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-i2c-confirm.png" />
+    <img src=".github/images/screenshots/config-i2c-confirm.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-i2c-done.png" />
+    <img src=".github/images/screenshots/config-i2c-done.png" />
   </p>
 
   <p align="center">
-    <img src=".github/images/config-finish.png" />
+    <img src=".github/images/screenshots/config-finish.png" />
   </p>
 </details>
 
@@ -365,20 +394,9 @@ Then reboot the Pi Zero:
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
-## Pi OS Upgrade <a name="pi-os-upgrade"></a>
-
-To upgrade the Raspberry Pi OS, follow these steps:
-
-> ![Info][img-info] You will need to increase your swap size to 2GB to speed up the upgrade process. Follow the steps in the [Setup speed increase](#setup-speed-increase) section below.
-
-  ```bash
-  # Update the system
-  sudo apt-get update
-  # Upgrade the system, this step may take some time and may appear to hang at times
-  sudo apt-get upgrade
-  ```
-
-<p align="right">[ <a href="#index">Index</a> ]</p>
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
 
 ## Setup speed increase (for installs) <a name="setup-speed-increase"></a>
 
@@ -426,15 +444,51 @@ After the installation(s) are complete, you can reset the swap size to the defau
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
-## Thanks!
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Licensing <a name="licensing"></a>
+
+This project is licensed under the Apache License, Version 2.0. See the [APACHE_2_LICENSE](LICENSE) file for the pertaining license text.
+
+`SPDX-License-Identifier: Apache-2.0`
+
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Wrapping Up <a name="wrapping-up"></a>
+
+Thanks to all the people and projects that made this possible! I hope you enjoy this project as much as I enjoyed working on it. If you have any questions, please let me know by opening an issue [here][issues-link].
+
+| Type                                                                      | Info                                                                      |
+| :------------------------------------------------------------------------ | :------------------------------------------------------------------------ |
+| <img width="48" src=".github/images/ng-icons/email.svg" />                | webmaster@codytolene.com                                                  |
+| <img width="48" src=".github/images/simple-icons/buymeacoffee.svg" />     | https://www.buymeacoffee.com/codytolene                                   |
+| <img width="48" src=".github/images/simple-icons/bitcoin-btc-logo.svg" /> | [bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt][url-btc] |
+
+Fin. Happy programming friend!
 
 Cody Tolene
 
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
 <!-- IMAGE REFERENCES -->
 
-[img-info]: .github/images/info.svg
-[img-warning]: .github/images/warn.svg
+[img-info]: .github/images/ng-icons/info.svg
+[img-warning]: .github/images/ng-icons/warn.svg
 
 <!-- LINK REFERENCES -->
 
+[url-btc]: https://explorer.btc.com/btc/address/bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt
 [url-pi3g]: https://www.pi3g.com
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->

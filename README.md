@@ -2,6 +2,12 @@
 
 Todo...
 
+This repository is not yet ready for use, please check back later!
+
+For the latest updates, please visit the development branch:
+
+https://github.com/CodyTolene/Pocket-Pi/tree/development
+
 ## Index <a name="index"></a>
 
 - [Raspberry Pi 2 W Information](#raspberry-pi-two-w-info)

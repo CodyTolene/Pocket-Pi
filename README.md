@@ -104,6 +104,10 @@ Documents:
 4. After the installation is complete, open the microSD card on your computer and then the `config.txt` file. Add the following to the end of the file:
 
   ```bash
+  # Enable SPI and I2C interfaces
+  dtparam=i2c_arm=on
+  dtparam=spi=on
+  
   # 1.3inch IPS LCD display HAT
   hdmi_force_hotplug=1
   hdmi_cvt=300 300 60 1 0 0 0
@@ -115,7 +119,7 @@ Documents:
   # Enable USB OTG port
   dtoverlay=dwc2
 
-  # Be sure to comment out any existing driver lines, ie.
+  # Be sure to comment out any other `dtoverlay` related lines.
   # dtoverlay=vc4-kms-v3d
   # max_framebuffers=2
   ```
@@ -130,11 +134,11 @@ Documents:
 
 7. Save and close `cmdline.txt`. 
 
-8. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
+8. Create a new file named `ssh` in the root of the microSD card. This will enable SSH on the Raspberry Pi Zero.
 
-9. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on.
+9. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
 
-10. You should now be able to connect to your Pi using SSH either wirelessly (if you entered your Wi-Fi settings during setup) or USB cable. If you're using a USB cable, you may need to install the necessary drivers, there are many guides online to help with this.
+10. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on. You should now be able to connect to your Pi using SSH.
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -144,7 +148,7 @@ Documents:
 
 ## Updating and Upgrading the Raspberry Pi Zero <a name="updating-and-upgrading"></a>
 
-In this section we will update and upgrade the Raspberry Pi Zero to ensure we have the latest software and security updates. It may be possible to skip this section if you've just installed the Raspberry Pi OS. If you're unsure, it's always a good idea to update to be sure. This will take aproximately 10-20 minutes to complete.
+In this section we will update and upgrade the Raspberry Pi Zero to ensure we have the latest software and security updates. It may be possible to skip this section if you've just installed the Raspberry Pi OS. If you're unsure, it's always a good idea to update to be sure (at the very least just run `sudo apt update` to check). This will take aproximately 10-20 minutes to complete.
 
 1. Open the terminal and run the following command to access the Raspberry Pi Zero. Using the hostname and the username and password you set during the installation:
 
@@ -247,7 +251,7 @@ Reboot Raspberry Pi：
 Open the Raspberry Pi terminal and run the following command:
 
   ```bash
-  sudo apt-get install p7zip-full -y
+  sudo apt install p7zip-full -y
   wget https://files.waveshare.com/upload/b/bd/1.3inch_LCD_HAT_code.7z
   7z x 1.3inch_LCD_HAT_code.7z -r -o./1.3inch_LCD_HAT_code
   sudo chmod 777 -R 1.3inch_LCD_HAT_code
@@ -258,20 +262,21 @@ Run the demo:
 
   ```bash
   cd 1.3inch_LCD_HAT_code/python
-  # This will show an image on the screen for a few seconds. Press Ctrl+C to exit
+  # This will show an image on the screen for a few seconds.
   sudo python main.py
-  # This will show another image on the screen for a few seconds. Press Ctrl+C to exit
+  # This will show another image on the screen. 
+  # You should test your screens buttons now as well. If all looks good, press `Ctrl+C` to quit.
   sudo python key_demo.py
   ```
 
-After confirming the demos, you can now compile and run the screen firmware. First we need to install the necessary dependencies:
+After confirming the demos, you can now compile and run the screen firmware:
 
   ```bash
   cd ~
+  # Install the necessary dependencies
+  sudo apt install python3-pip python3-pil python3-numpy python3-spidev
   # This will take a few minutes to complete.
-  sudo apt-get install cmake -y
-  sudo apt-get install libraspberrypi-dev -y
-  sudo apt-get install p7zip-full -y
+  sudo apt install cmake libraspberrypi-dev p7zip-full -y
   wget https://files.waveshare.com/upload/f/f9/Waveshare_fbcp.7z
   7z x Waveshare_fbcp.7z -o./waveshare_fbcp
   cd waveshare_fbcp
@@ -279,7 +284,7 @@ After confirming the demos, you can now compile and run the screen firmware. Fir
   cd build
   ```
 
-Use the following commands to compile the software:
+Use the following commands to compile the software for the 1.3 inch screen:
 
   ```bash
   cmake -DSPI_BUS_CLOCK_DIVISOR=20 -DWAVESHARE_1INCH3_LCD_HAT=ON -DBACKLIGHT_CONTROL=ON -DSTATISTICS=0 ..
@@ -371,7 +376,7 @@ Then reboot the Pi Zero:
 
   ```bash
   # Install the p7zip package to handle 7z archives
-  sudo apt-get install p7zip
+  sudo apt install p7zip
 
   # Download the UPS HAT software archive from the Waveshare website
   wget https://files.waveshare.com/upload/4/40/UPS_HAT_C.7z

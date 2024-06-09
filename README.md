@@ -11,6 +11,7 @@
 
 ## Index <a name="index"></a>
 
+- [Video Preview](#video-preview)
 - [Raspberry Pi 2 W Information](#raspberry-pi-two-w-info)
 - [Raspberry Pi 2 W OS Setup](#pi-os-setup)
 - [MicroSD Card Setup & PC Connection (SSH)](#sd-card-setup-and-pc-connection)
@@ -26,6 +27,10 @@
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
+
+## Video Preview <a name="video-preview"></a>
+
+![Demo Video](.github/images/demo.gif)
 
 ## Raspberry Pi Zero 2 W Information <a name="raspberry-pi-two-w-info"></a>
 

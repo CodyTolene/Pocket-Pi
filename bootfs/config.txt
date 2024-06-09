@@ -1,0 +1,20 @@
+# For more options and information see
+# http://rpf.io/configtxt
+
+camera_auto_detect=0
+display_auto_detect=1
+disable_overscan=1
+
+[cm4]
+otg_mode=1
+
+[pi4]
+arm_boost=1
+
+[all]
+hdmi_force_hotplug=1
+hdmi_cvt=300 300 60 1 0 0 0
+hdmi_group=2
+hdmi_mode=87
+display_rotate=0
+gpio=6,19,5,26,13,21,20,16=pu

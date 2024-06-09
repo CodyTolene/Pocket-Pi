@@ -18,10 +18,12 @@ https://github.com/CodyTolene/Pocket-Pi/tree/development
 - [Raspberry Pi 2 W OS Setup](#pi-os-setup)
 - [MicroSD Card Setup & PC Connection (SSH)](#sd-card-setup-and-pc-connection)
 - [Increasing Swap Size](#increasing-swap-size)
-- [Updating, Upgrading, and Dependencies](#updating-upgrading-dependencies)
+- [Updating & Upgrading](#updating-upgrading)
 - [Screen Module Setup](#screen-module-setup)
+- [Joystick and Buttons Setup](#joystick-and-buttons-setup)
 - [Battery Module Setup](#battery-module-setup)
 - [Licensing](#licensing)
+- [Useful Commands](#useful-commands)
 - [Wrapping Up](#wrapping-up)
 
 <!---------------------------------------------------------------------------->
@@ -77,32 +79,41 @@ Documents:
 
 2. Plug the microSD card into the computer and open the Raspberry Pi Imager.
 
-3. We'll install the full Raspberry Pi OS (Bookworm, 32-bit) in this example so we can take advantage of our massive 1.3inch IPS LCD display HAT:
+3. We'll install the full [Raspberry Pi Legacy OS (Bullseye, not ~~Bookworm~~, 32-bit)][url-pi-os] in this example so we can take advantage of our massive 1.3inch IPS LCD display HAT:
 
-> ![Info][img-info] Before installation enable SSH, take note of the hostname, set the username and password for the Raspberry Pi Zero, and set up your connection to the Wi-Fi network.
+  > ![Info][img-info] Before installation enable SSH, take note of the hostname, set the username and password for the Raspberry Pi Zero, and set up your connection to the Wi-Fi network.
 
-<details>
-  <summary>Installation Images (click to expand)</summary>
+  <details>
+    <summary>Installation Images (click to expand)</summary>
 
-  <p align="center">
-    <img width="500" src=".github/images/screenshots/raspberry-pi-os-device.png" />
-  </p>
-  <p align="center">
-    <img width="500" src=".github/images/screenshots/raspberry-pi-os.png" />
-  </p>
-  <p align="center">
-    <img width="500" src=".github/images/screenshots/raspberry-pi-os-customization.png" />
-  </p>
-  <p align="center">
-    <img width="500" src=".github/images/screenshots/raspberry-pi-os-ready.png" />
-  </p>
-  <p align="center">
-    <img width="500" src=".github/images/screenshots/raspberry-pi-os-installing.png" />
-  </p>
-  <p align="center">
-    <img width="500" src=".github/images/screenshots/raspberry-pi-os-install-complete.png" />
-  </p>
-</details>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-device.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-os.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-storage.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-ready.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-customization-1.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-customization-2.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-installing.png" />
+    </p>
+    <p align="center">
+      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-install-complete.png" />
+    </p>
+  </details>
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -112,38 +123,25 @@ Documents:
 
 ## MicroSD Card Setup & PC Connection (SSH) <a name="sd-card-setup-and-pc-connection"></a>
 
-1. With the microSD card still in your computer, open the `config.txt` file. Add the following to the end of the file:
+Copy the files from the `bootfs` folder at the root of this repository onto the newly created microSD card `bootfs` partition. This will enable SSH, Ethernet over USB, and configure the display settings for the 1.3inch IPS LCD display HAT. Be sure to overwrite any existing files on the microSD card. If you would like to do this manually, follow the steps below:
+
+1. With the microSD card still in your computer, open the `config.txt` file and modify to match the following settings:
 
   ```bash
-  # Add these new settings for the 1.3inch IPS LCD display HAT
+  [all]
   hdmi_force_hotplug=1
   hdmi_cvt=300 300 60 1 0 0 0
   hdmi_group=2
   hdmi_mode=87
   display_rotate=0
   gpio=6,19,5,26,13,21,20,16=pu
-
-  # Enable USB OTG port (SSH and Ethernet over USB)
-  dtoverlay=dwc2
   ```
 
-2. Uncomment the existing lines to enable SPI and I2C interfaces, make sure they're set to "on":
+  > ![Info][img-info] Comment out or remove everything prefixed with a `dtoverlay=` and `dtparam=`.
 
-  ```bash
-  dtparam=i2c_arm=on
-  dtparam=spi=on
-  ```
+2. Save and close `config.txt`. 
 
-3. Make sure to comment out the following lines:
-
-  ```bash
-    # dtoverlay=vc4-kms-v3d
-    # max_framebuffers=2
-  ```
-
-4. Save and close `config.txt`. 
-
-5. In the same directory, open the file `cmdline.txt` and add `modules-load=dwc2,g_ether` after `rootwait`. Ensure it remains a single line of text, and has proper spacing. For example:
+3. In the same directory, open the file `cmdline.txt` and add `modules-load=dwc2,g_ether` after `rootwait`. Ensure it remains a single line of text, and has proper spacing. For example:
 
   ```bash
   ... rootwait modules-load=dwc2,g_ether ...
@@ -151,20 +149,22 @@ Documents:
 
   > ![Info][img-info] This is part of enabling SSH and Ethernet over USB.
 
-6. Save and close `cmdline.txt`. 
+4. Save and close `cmdline.txt`. 
 
-7. Create a new file named `ssh` in the root of the microSD card. This is part of enabling SSH on the Raspberry Pi Zero.
+5. Create a new file named `ssh` in the root of the microSD card. This is part of enabling SSH on the Raspberry Pi Zero.
 
-8. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
+6. Remove the microSD card from the computer and insert it into the Raspberry Pi Zero.
 
-9. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on. 
+7. Plug the Raspberry Pi Zero into the computer using a USB cable. Connect the cable to the USB port in the center of the Raspberry Pi Zero labeled `USB`. The green LED will light up, indicating the Raspberry Pi Zero is powered on. 
 
-10. You should now be able to connect to your Pi using SSH:
+8. You should now be able to connect to your Pi using SSH in a CLI:
 
   ```bash
-  # Replace "code@pinhead.local" with your own `hostname` and `username`.
-  ssh code@pinhead.local
+  # Replace "code@pocketpi.local" with your own `hostname` and `username`.
+  ssh code@pocketpi.local
   ```
+
+  > ![Info][img-info] It may take a minute for the Pi Zero to connect. If you are prompted to accept the host key, type `yes` and press `Enter`. You will then be prompted for the password you set during the installation.
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -179,7 +179,7 @@ Increasing the swap size can help speed up the installation process and various 
   > ![Info][img-info] You can revert this at a later point if you wish or keep it. See "Reverting back to 100MiB" below.
 
   ```bash
-  # Check current swap size (you should see 100MiB or 99MiB for "total")
+  # Check current swap size (you should see 100MiB or 99MiB for "Swap total")
   free -h
   # Disable current swap
   sudo dphys-swapfile swapoff
@@ -192,7 +192,7 @@ Increasing the swap size can help speed up the installation process and various 
   # Reboot
   sudo reboot
   # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   # Verify the new swap size (should be 2048MiB, or 2GiB)
   free -h
   ```
@@ -212,7 +212,7 @@ Increasing the swap size can help speed up the installation process and various 
   # Reboot
   sudo reboot
   # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   # Verify the reverted swap size (you should be 100MiB or 99MiB)
   free -h
   ```
@@ -224,14 +224,14 @@ Increasing the swap size can help speed up the installation process and various 
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
 
-## Updating, Upgrading, and Dependencies <a name="updating-upgrading-dependencies"></a>
+## Updating & Upgrading <a name="updating-upgrading"></a>
 
 In this section we will update and upgrade the Raspberry Pi Zero to ensure we have the latest software and security updates.
 
 1. Open the terminal and run the following command to access the Raspberry Pi Zero. Using the hostname and the username and password you set during the installation:
 
   ```bash
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   ```
 
 2. Update & upgrade the system (the y flag will automatically answer yes to any prompts)
@@ -240,15 +240,7 @@ In this section we will update and upgrade the Raspberry Pi Zero to ensure we ha
   sudo apt-get update && sudo apt-get full-upgrade -y
   ```
 
-3. Install the necessary dependencies for the modules in the upcoming steps
-
-  ```bash
-  sudo apt-get install python3-pip python3-pil python3-numpy python3-spidev -y
-  sudo apt-get install p7zip-full cmake -y
-  sudo apt-get install libraspberrypi-dev raspberrypi-kernel-headers -y
-  ```
-
-4. Reboot the Raspberry Pi Zero
+3. Reboot the Raspberry Pi Zero
 
   ```bash
   sudo reboot
@@ -277,7 +269,7 @@ Documentation:
 Connect to the Raspberry Pi Zero via SSH:
 
   ```bash
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   ```
 
 Run the following commands to enable the SPI interface. It should already be enabled if you followed the SD card setup, but it's good to make sure.
@@ -317,86 +309,58 @@ Ensure your user has the necessary permissions to access the SPI device:
   sudo usermod -aG spi,gpio $(whoami)
   ```
 
+Install fbcp driver for the screen:
+
+  ```bash
+  cd ~
+  sudo apt-get install cmake -y
+  git clone https://github.com/juj/fbcp-ili9341.git
+  cd fbcp-ili9341
+  mkdir build
+  cd build
+  cmake -DSPI_BUS_CLOCK_DIVISOR=6 -DWAVESHARE_ST7789VW_HAT=ON -DBACKLIGHT_CONTROL=ON ..
+  make -j
+  ```
+
 Reboot Raspberry Pi：
   
   ```bash
   sudo reboot
   # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   ```
 
-### Software Installation
+To auto-start when powered on, open the `/etc/rc.local` file for edit:
 
   ```bash
-  cd ~
-  wget https://github.com/joan2937/lg/archive/master.zip
-  unzip master.zip
-  cd lg-master
-  sudo make install
-  ```
-
-### Download Examples
-
-Open the Raspberry Pi terminal and run the following command:
-
-  ```bash
-  wget https://files.waveshare.com/upload/b/bd/1.3inch_LCD_HAT_code.7z
-  7z x 1.3inch_LCD_HAT_code.7z -r -o./1.3inch_LCD_HAT_code
-  sudo chmod 777 -R 1.3inch_LCD_HAT_code
-  ```
-
-Run the demo:
-
-  ```bash
-  # Change directory to where the Python demo code is located
-  cd 1.3inch_LCD_HAT_code/1.3inch_LCD_HAT_code/python
-  # This will show an image on the screen for a few seconds.
-  sudo python main.py
-  # This will show another image on the screen. 
-  # You should test your screens buttons now as well. If all looks good, press `Ctrl+C` to quit.
-  sudo python key_demo.py
-  ```
-
-After confirming the demos, you can now compile and run the screen firmware:
-
-  ```bash
-  cd ~
-  wget https://files.waveshare.com/upload/f/f9/Waveshare_fbcp.7z
-  7z x Waveshare_fbcp.7z -o./waveshare_fbcp
-  cd waveshare_fbcp
-  mkdir build
-  cd build
-  ```
-
-Use the following commands to compile the software for the 1.3 inch screen:
-
-  ```bash
-  cmake -DSPI_BUS_CLOCK_DIVISOR=20 -DWAVESHARE_1INCH3_LCD_HAT=ON -DBACKLIGHT_CONTROL=ON -DSTATISTICS=0 ..
-  make -j
-  # Test the screen, it will display a "_" on screen for a bit. press `Ctrl+C` to quit.
-  sudo ./fbcp
-  ```
-
-Auto-start when Power on:
-
-  ```bash
-  sudo cp ~/waveshare_fbcp/build/fbcp /usr/local/bin/fbcp
   sudo nano /etc/rc.local
   ```
 
-Then add `fbcp&` on the line above and before `exit 0`, as the picture below:
+And add the following line just above and before `exit 0`:
 
-<p align="center">
-  <img src=".github/images/screenshots/fbcp.png" />
-</p>
+  ```bash
+  sudo /home/code/fbcp-ili9341/build/fbcp-ili9341 &
+  ```
 
-After you're done making edits press `Ctrl+X`, then `Y`, and then `Enter` to save and exit. Then reboot the Raspberry Pi Zero:
+> ![Info][img-info] Replace `code` in the last example with your `username`.
+
+After you're done making edits press `CTRL + O`, then `ENTER`, and then `CTRL + X` to exit. Reboot the Raspberry Pi Zero:
 
   ```bash
   sudo reboot
   # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   ```
+
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Joystick and Buttons Setup <a name="joystick-and-buttons-setup"></a>
+
+Todo...
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -454,7 +418,7 @@ Then reboot the Pi Zero:
   ```bash
   sudo reboot
   # Reconnect to the Raspberry Pi Zero
-  ssh code@pinhead.local
+  ssh code@pocketpi.local
   ```
 
 ### Software Installation
@@ -493,6 +457,19 @@ This project is licensed under the Apache License, Version 2.0. See the [APACHE_
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Useful Commands <a name="useful-commands"></a>
+
+Edit the `config.txt` file:
+
+  ```bash
+  sudo nano /boot/config.txt
+  ```
+
+<p align="right">[ <a href="#index">Index</a> ]</p>
 
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->
@@ -525,6 +502,7 @@ Cody Tolene
 
 [url-btc]: https://explorer.btc.com/btc/address/bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt
 [url-pi3g]: https://www.pi3g.com
+[url-pi-os]: https://downloads.raspberrypi.com/raspios_oldstable_armhf/images/raspios_oldstable_armhf-2024-03-12/2024-03-12-raspios-bullseye-armhf.img.xz
 
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->

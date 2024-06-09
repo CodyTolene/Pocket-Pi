@@ -12,6 +12,7 @@
 ## Index <a name="index"></a>
 
 - [Video Preview](#video-preview)
+- [Parts List](#parts-list)
 - [Raspberry Pi 2 W Information](#raspberry-pi-two-w-info)
 - [Raspberry Pi 2 W OS Setup](#pi-os-setup)
 - [MicroSD Card Setup & PC Connection (SSH)](#sd-card-setup-and-pc-connection)
@@ -32,6 +33,27 @@
 
 ![Demo Video](.github/images/demo.gif)
 
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+## Parts List <a name="parts-list"></a>
+
+| Part                                                        | Price (USD) |
+| :---------------------------------------------------------- | :---------- |
+| [Raspberry Pi Zero 2 W][url-pi-zero]                        | $15.00      |
+| [240x240, 1.3inch IPS LCD display HAT][url-pi-lcd-hat]      | $14.95      |
+| [Uninterruptible Power Supply UPS HAT][url-pi-power-supply] | $27.95      |
+| 3D Printed Case (coming soon!)                              | ...         |
+
+<p align="right">[ <a href="#index">Index</a> ]</p>
+
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
 ## Raspberry Pi Zero 2 W Information <a name="raspberry-pi-two-w-info"></a>
 
 "Building on the success of the current Zero family, Raspberry Pi Zero 2 W is built around a Raspberry Pi-designed System-in-Package, which integrates the BCM2710A1 die used in Raspberry Pi 3 with 512MB of RAM."
@@ -51,7 +73,7 @@ Features:
 
 Purchase: 
 
-- https://www.pishop.us/product/raspberry-pi-zero-2-w/
+- [https://www.pishop.us/product/raspberry-pi-zero-2-w/][url-pi-zero]
 
 Documents: 
 
@@ -59,15 +81,19 @@ Documents:
 
 - https://datasheets.raspberrypi.com/rpizero2/raspberry-pi-zero-2-w-product-brief.pdf
 
-<p align="center">
-  <img width="500" src=".github/images/pi3g/pi3g-top.png" />
-</p>
+<details>
+  <summary>Infographics (click to expand)</summary>
 
-<p align="center">
-  <img width="500" src=".github/images/pi3g/pi3g-bottom.png" />
-</p>
+  <p align="center">
+    <img width="500" src=".github/images/pi3g/pi3g-top.png" />
+  </p>
 
-> ![Info][img-info] Images courtesy of [pi3g][url-pi3g]
+  <p align="center">
+    <img width="500" src=".github/images/pi3g/pi3g-bottom.png" />
+  </p>
+
+  > ![Info][img-info] Images courtesy of [pi3g][url-pi3g]
+</details>
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -85,37 +111,47 @@ Documents:
 
   > ![Info][img-info] Before installation enable SSH, take note of the hostname, set the username and password for the Raspberry Pi Zero, and set up your connection to the Wi-Fi network.
 
-  <details>
-    <summary>Installation Images (click to expand)</summary>
+<details>
+  <summary>Installation Images (click to expand)</summary>
 
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-device.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-os.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-storage.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-ready.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-customization-1.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-customization-2.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-installing.png" />
-    </p>
-    <p align="center">
-      <img width="500" src=".github/images/screenshots/raspberry-pi-imager-install-complete.png" />
-    </p>
-  </details>
+  <p align="center">
+    <br/><br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager.png" />
+    <br/>
+    Select "Raspberry Pi Zero 2 W" from the list of devices.
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-device.png" />
+    <br/>
+    Select "Raspberry Pi OS (Legacy, 32-bit)" from the list of operating systems.
+    <br/>
+    Or the "Use custom" if you download the OS image from the Raspberry Pi website directly from above.
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-os.png" />
+    <br/>
+    Choose your storage device.
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-storage.png" />
+    <br/>
+    Click "Next" to start the installation process.
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-ready.png" />
+    <br/>
+    When the installer asks if you want to customize the installation, click "Yes". Enter your custom hostname, username, and password if you'd like, you'll use these later so take note of them.
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-customization-1.png" />
+    <br/>
+    The second customization screen allows you to set up SSH. Enable SSH and press "Save".
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-customization-2.png" />
+    <br/>
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-installing.png" />
+    <br/>
+    The installation is completed, but keep your microSD card in the computer for the next few steps.
+    <br/>
+    <img width="500" src=".github/images/screenshots/raspberry-pi-imager-install-complete.png" />
+  </p>
+</details>
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 
@@ -260,7 +296,7 @@ In this section we will update and upgrade the Raspberry Pi Zero to ensure we ha
 
 Purchase: 
 
-- https://www.pishop.us/product/240x240-1-3inch-ips-lcd-display-hat-for-raspberry-pi/
+- [https://www.pishop.us/product/240x240-1-3inch-ips-lcd-display-hat-for-raspberry-pi/][url-pi-lcd-hat]
 
 Documentation: 
 
@@ -413,7 +449,7 @@ You should now be able to use the joystick and buttons to move the mouse cursor 
 
 Purchase: 
 
-- https://www.pishop.us/product/uninterruptible-power-supply-ups-hat-for-raspberry-pi-zero-stable-5v-power-output/
+- [https://www.pishop.us/product/uninterruptible-power-supply-ups-hat-for-raspberry-pi-zero-stable-5v-power-output/][url-pi-power-supply]
 
 Documentation: 
 
@@ -540,8 +576,11 @@ Cody Tolene
 <!-- LINK REFERENCES -->
 
 [url-btc]: https://explorer.btc.com/btc/address/bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt
-[url-pi3g]: https://www.pi3g.com
+[url-pi-lcd-hat]: https://www.pishop.us/product/240x240-1-3inch-ips-lcd-display-hat-for-raspberry-pi/
 [url-pi-os]: https://downloads.raspberrypi.com/raspios_oldstable_armhf/images/raspios_oldstable_armhf-2024-03-12/2024-03-12-raspios-bullseye-armhf.img.xz
+[url-pi-power-supply]: https://www.pishop.us/product/uninterruptible-power-supply-ups-hat-for-raspberry-pi-zero-stable-5v-power-output/
+[url-pi-zero]: https://www.pishop.us/product/raspberry-pi-zero-2-w/
+[url-pi3g]: https://www.pi3g.com
 
 <!---------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------->

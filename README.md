@@ -360,7 +360,44 @@ After you're done making edits press `CTRL + O`, then `ENTER`, and then `CTRL + 
 
 ## Joystick and Buttons Setup <a name="joystick-and-buttons-setup"></a>
 
-Todo...
+Install the necessary software to use the joystick and buttons:
+
+  ```bash
+  sudo apt-get install python3-xlib
+  sudo pip3 install PyMouse
+  sudo pip3 install unix
+  sudo pip3 install PyUserInput
+  wget http://www.waveshare.net/w/upload/d/d3/Mouse.7z
+  7z x Mouse.7z
+  sudo python3 mouse.py
+  ```
+
+Set the auto-start when power on:
+
+  ```bash
+  cd ~/.config/
+  mkdir autostart
+  cd autostart/
+  sudo nano local.desktop
+  ```
+
+Add the following lines at the end of the `local.desktop` file:
+
+  ```bash
+  [Desktop Entry]
+  Type=Application
+  Exec=python3 /home/code/mouse.py
+  ```
+
+  > ![Info][img-info] Replace `code` in the last example with your `username`.
+
+Press `CTRL + O`, then `ENTER`, and then `CTRL + X` to exit. Reboot the Raspberry Pi Zero:
+
+  ```bash
+  sudo reboot
+  ```
+
+You should now be able to use the joystick and buttons to move the mouse cursor and click on the screen.
 
 <p align="right">[ <a href="#index">Index</a> ]</p>
 

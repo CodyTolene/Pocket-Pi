@@ -1,16 +1,13 @@
-## Intro
-
-Todo...
-
-This repository is not yet ready for use, please check back later!
-
-For the latest updates, please visit the development branch:
-
-https://github.com/CodyTolene/Pocket-Pi/tree/development
-
-<!---------------------------------------------------------------------------->
-<!---------------------------------------------------------------------------->
-<!---------------------------------------------------------------------------->
+<div align="center">
+  <img align="center" src=".github/images/pocket-pi.png" />
+  <h2 align="center">Pocket Pi</h2>
+  <p align="center">
+    A simple guide to setting up a Raspberry Pi Zero 2 W with a 1.3inch IPS LCD display HAT, joystick, buttons, and battery module.
+  </p>
+  <p align="center">
+    Run a full Raspberry Pi OS in the palm of your hand!
+  </p>
+</div>
 
 ## Index <a name="index"></a>
 

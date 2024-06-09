@@ -552,7 +552,7 @@ Edit the `config.txt` file:
 
 ## Wrapping Up <a name="wrapping-up"></a>
 
-Thanks to all the people and projects that made this possible! I hope you enjoy this project as much as I enjoyed working on it. If you have any questions, please let me know by opening an issue [here][issues-link].
+Thanks to all the people and projects that made this possible! I hope you enjoy this project as much as I enjoyed working on it. If you have any questions, please let me know by opening an issue [here][url-new-issue].
 
 | Type                                                                      | Info                                                                      |
 | :------------------------------------------------------------------------ | :------------------------------------------------------------------------ |
@@ -576,6 +576,7 @@ Cody Tolene
 <!-- LINK REFERENCES -->
 
 [url-btc]: https://explorer.btc.com/btc/address/bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt
+[url-new-issue]: https://github.com/CodyTolene/Pocket-Pi/issues/new
 [url-pi-lcd-hat]: https://www.pishop.us/product/240x240-1-3inch-ips-lcd-display-hat-for-raspberry-pi/
 [url-pi-os]: https://downloads.raspberrypi.com/raspios_oldstable_armhf/images/raspios_oldstable_armhf-2024-03-12/2024-03-12-raspios-bullseye-armhf.img.xz
 [url-pi-power-supply]: https://www.pishop.us/product/uninterruptible-power-supply-ups-hat-for-raspberry-pi-zero-stable-5v-power-output/

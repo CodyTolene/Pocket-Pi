@@ -554,11 +554,12 @@ Edit the `config.txt` file:
 
 Thanks to all the people and projects that made this possible! I hope you enjoy this project as much as I enjoyed working on it. If you have any questions, please let me know by opening an issue [here][url-new-issue].
 
-| Type                                                                      | Info                                                                      |
-| :------------------------------------------------------------------------ | :------------------------------------------------------------------------ |
-| <img width="48" src=".github/images/ng-icons/email.svg" />                | webmaster@codytolene.com                                                  |
-| <img width="48" src=".github/images/simple-icons/buymeacoffee.svg" />     | https://www.buymeacoffee.com/codytolene                                   |
-| <img width="48" src=".github/images/simple-icons/bitcoin-btc-logo.svg" /> | [bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt][url-btc] |
+| Type                                                                      | Info                                                           |
+| :------------------------------------------------------------------------ | :------------------------------------------------------------- |
+| <img width="48" src=".github/images/ng-icons/email.svg" />                | webmaster@codytolene.com                                       |
+| <img width="48" src=".github/images/simple-icons/github.svg" />           | https://github.com/sponsors/CodyTolene                         |
+| <img width="48" src=".github/images/simple-icons/buymeacoffee.svg" />     | https://www.buymeacoffee.com/codytolene                        |
+| <img width="48" src=".github/images/simple-icons/bitcoin-btc-logo.svg" /> | bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt |
 
 Fin. Happy programming friend!
 
@@ -575,7 +576,6 @@ Cody Tolene
 
 <!-- LINK REFERENCES -->
 
-[url-btc]: https://explorer.btc.com/btc/address/bc1qfx3lvspkj0q077u3gnrnxqkqwyvcku2nml86wmudy7yf2u8edmqq0a5vnt
 [url-new-issue]: https://github.com/CodyTolene/Pocket-Pi/issues/new
 [url-pi-lcd-hat]: https://www.pishop.us/product/240x240-1-3inch-ips-lcd-display-hat-for-raspberry-pi/
 [url-pi-os]: https://downloads.raspberrypi.com/raspios_oldstable_armhf/images/raspios_oldstable_armhf-2024-03-12/2024-03-12-raspios-bullseye-armhf.img.xz
